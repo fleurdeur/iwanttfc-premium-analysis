@@ -736,7 +736,7 @@ def _best(tok_list):
     cands.sort(key=lambda t: (-jwt_exp(t), -len(t)))
     for t in cands[:4]:
         if _candidate_ok(t):
-            log(f"token accepted (sub={_n(_jwt_claims(t).get('sub'))[:8]}...)", "g")
+            log("token accepted", "g")
             return t, jwt_exp(t)
     if cands:
         log("no candidate authenticated - falling back to longest-lived", "w")
@@ -1238,7 +1238,7 @@ def do_login(exe):
     log(f"profile seeded -> {PROFILE}", "g")
     ident = collect_ident(tok)
     if ident.get("userId"):
-        log(f"identity seeded: {ident['userId']} ({ident.get('source')})", "g")
+        log("identity seeded", "g")
     ua = resolve_uauth("")
     log(f"legacy UserAuthentication: {'captured' if ua else 'not found'}", "g" if ua else "w")
 
@@ -1249,11 +1249,7 @@ def do_token(exe):
         log("no bearer found in the profile - run: login", "e")
         return
     cl = _jwt_claims(tok)
-    log(f"sub  : {cl.get('sub') or '-'}")
-    log(f"uid  : {cl.get('uid') or '-'}")
-    log(f"org  : {cl.get('org_name') or '-'}")
-    log(f"email: {cl.get('email') or '-'}")
-    log(f"valid: {'yes' if _candidate_ok(tok) else 'NO - API rejects it'}")
+    log(f"token ok: {'yes' if _candidate_ok(tok) else 'NO - API rejects it'}")
     report_ttl(tok, exp)
     log(f"cached -> {TOKENF}", "g")
 
@@ -1274,18 +1270,10 @@ def do_ident(token="", uid="", email="", with_app=False):
                 rec.pop("mismatch", None)
         IDENTF.write_text(json.dumps(rec, indent=2), encoding="utf-8")
     rec["jwt"] = _jwt_claims(tok)
-    print(json.dumps(rec, indent=2)[:4000])
     if not rec.get("userId"):
         log("no userId - pass --uid, or run login first", "e")
         return rec
-    log(f"userId: {rec['userId']} ({rec.get('source')})", "g")
-    if rec.get("jwt_uid") and rec.get("jwt_sub") and rec["jwt_uid"] != rec["jwt_sub"]:
-        log(f"jwt uid={rec['jwt_uid']}  sub={rec['jwt_sub']} (body uses uid)", "w")
-    if rec.get("mismatch"):
-        log(f"MISMATCH {rec['mismatch']}", "e")
-    if rec.get("email"):
-        log(f"email : {rec['email']} verified={rec.get('verified')} "
-            f"complete={rec.get('profileComplete')}")
+    log("identity captured (raw data kept in file only)", "g")
     log(f"cached -> {IDENTF}", "g")
     return rec
 
@@ -2540,7 +2528,7 @@ def capture(player_url, wait, exe, headless, live, spoof, keep_open, trace, auto
             report_ttl(tok, exp)
             s.identity = collect_ident(tok)
             if s.identity.get("userId"):
-                log(f"identity: {s.identity['userId']} ({s.identity.get('source')})", "g")
+                log("identity captured", "g")
         _poke_play(page)
         log(f"waiting up to {wait}s for manifest + license ...")
         deadline = time.time() + wait
@@ -3849,14 +3837,7 @@ def doctor():
     if IDENTF.exists():
         try:
             d = json.loads(IDENTF.read_text(encoding="utf-8"))
-            print(f"identity : {d.get('userId') or 'EMPTY'} {d.get('email') or ''} "
-                  f"({d.get('source')})")
-            ju = d.get("jwt_uid") or ""
-            js = d.get("jwt_sub") or ""
-            if ju and js and ju != js:
-                print(f"           jwt uid={ju} sub={js} (body uses uid)")
-            if d.get("mismatch"):
-                print(f"           MISMATCH {d['mismatch']}")
+            print("identity : present (personal data not printed)")
             if not d.get("userId"):
                 print("           empty - run: ident --uid <uuid>")
         except Exception:
@@ -4163,7 +4144,7 @@ def main():
         s.bearer = tok
         ident = collect_ident(tok, a.uid)
         if ident.get("userId"):
-            log(f"identity: {ident['userId']} ({ident.get('source')})", "g")
+            log("identity captured", "g")
         s.identity = ident
         bodies = body_variants(a.body, a.from_grab or a.from_capture, a.asset_id)
         log(f"bodies: {[sorted(b) if isinstance(b, dict) else 'str' for b in bodies]}")
@@ -4194,7 +4175,7 @@ def main():
                 ju = ident.get("jwt_uid") or ""
                 js = ident.get("jwt_sub") or ""
                 if ju and js and ju != js:
-                    log(f"identity candidates: uid={ju} sub={js}", "w")
+                    log("identity candidates differ - body uid vs jwt sub", "w")
                 u = ju or ident.get("userId") or "<uuid>"
                 log(f"try: mint {a.asset_id} --from-capture --http --uid {u}", "w")
                 log("     if the 401 persists, the account lacks this title - use an "
