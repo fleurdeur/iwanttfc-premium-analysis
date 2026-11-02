@@ -22,6 +22,12 @@ Put your own account data in the working folder before use:
 - Entitled content only. Premium titles return EPS 401; not supported.
 - Widevine needs a real CDM; attach your own Chrome over CDP.
 
+## Web tester
+
+The stream tester is published on GitHub Pages: https://fleurdeur.github.io/iwanttfc-premium-analysis/
+
+The source lives in `dash_tester.html` in this repo (also at the repo root copy).
+
 ## Tests
 
 - `python -m unittest test_iwant_bypass -v`
