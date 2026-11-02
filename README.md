@@ -7,8 +7,8 @@ test + analysis suite. No user data is committed.
 
 Put your own account data in the working folder before use:
 
-- bearer token: `token.txt` (run `python iwant_bypass.py token`)
-- identity: `identity.json` (run `python iwant_bypass.py ident`)
+- bearer token: `token_template.json` -> `token.txt` (run `python iwant_bypass.py token`)
+- identity: `identity_template.json` -> `identity.json` (run `python iwant_bypass.py ident`)
 - start templates / captured sessions: `start_template.json`, `sessions/`
 
 ## Commands
