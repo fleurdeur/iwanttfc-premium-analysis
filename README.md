@@ -42,13 +42,51 @@ The stream tester is published on GitHub Pages: https://fleurdeur.github.io/iwan
 
 The source lives in `dash_tester.html` in this repo (also at the repo root copy).
 
-Open the tester with a real stream already loaded:
+### One-time: Enable GitHub Pages
 
-    https://fleurdeur.github.io/iwantttfc-premium-analysis/?mpd=<your-mpd-url>&lic=<your-license-url>&kind=live
+```powershell
+# In the repo directory
+git checkout main
+# Then in GitHub browser:
+#   Settings → Pages → Source: main / folder /docs
+# Wait ~1 minute, then visit:
+#   https://fleurdeur.github.io/iwanttfc-premium-analysis/
+```
 
-The auto quick-start buttons use public demo streams; the URL params above make the
-beginner auto mode play your own captured or minted stream. The primary
-"Auto: play my stream" button does the same thing from the tester itself.
+### Open the tester locally
+
+```powershell
+# Option 1: Open directly (uses live demo stream when no ?mpd param)
+start https://fleurdeur.github.io/iwanttfc-premium-analysis/
+
+# Option 2: Open with your own stream params
+start "https://fleurdeur.github.io/iwanttfc-premium-analysis/?mpd=<your-mpd-url>&lic=<your-license-url>&kind=live"
+```
+
+### Auto quick-start behavior
+
+The "Auto: play my stream" button (`bReal`) has three-tier logic:
+
+| Scenario | Result |
+|---|---|
+| **URL has `?mpd=...&lic=...&kind=live`** | Plays your captured/minted stream (preserved) |
+| **No `?mpd=` + Python Flask server running at `localhost:5000`** | XHR fetches `/api/session`, grabs real MPD + DRM license, auto-fills URL/license, starts playback |
+| **No `?mpd=` + no Python server** | 🔄 Falls back to public live demo stream → auto-fills URL → starts playback |
+
+#### Running the local Python Flask server (for the middle tier)
+
+```powershell
+# In the repo directory
+python iwant_bypass.py play
+
+# Then open the tester (the XHR will hit this server)
+start https://fleurdeur.github.io/iwanttfc-premium-analysis/
+```
+
+The demo buttons work as before:
+- **Auto demo: live** → `https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd`
+- **Auto demo: VOD** → `https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd`
+- **Auto: best quality** → `autoPick=true` mode
 
 ## Tests
 
