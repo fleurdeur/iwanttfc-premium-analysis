@@ -988,10 +988,11 @@ $('sVod').onclick=function(){$('url').value=SAMPLES.vod;start()};
 $('bAuto').onclick=function(){$('url').value=SAMPLES.live;start()};
 $('bAutoVod').onclick=function(){$('url').value=SAMPLES.vod;start()};
 $('bBest').onclick=function(){autoPick=true;start()};
-$('bReal').onclick=function(){var m=new URLSearchParams(location.search).get('mpd');
-  if(!m){status('Pass ?mpd=<url>&lic=<lic> to auto-play your stream.','err');return}
-  start()};
-
+$('bReal').onclick=function(){
+    var m=new URLSearchParams(location.search).get('mpd');
+    if(m){$('url').value=m;var l=new URLSearchParams(location.search).get('lic');if(l)$('lic').value=l;autoPick=false;start();return}
+    var url=$('url').value.trim();if(!url){status('Enter an .mpd URL first.','err');return}start()
+}
 function renderCode(){
   var u=curUrl||$('url').value.trim()||'https://example.com/stream.mpd';
   var out={
