@@ -47,7 +47,8 @@ Open the tester with a real stream already loaded:
     https://fleurdeur.github.io/iwantttfc-premium-analysis/?mpd=<your-mpd-url>&lic=<your-license-url>&kind=live
 
 The auto quick-start buttons use public demo streams; the URL params above make the
-beginner auto mode play your own captured or minted stream.
+beginner auto mode play your own captured or minted stream. The primary
+"Auto: play my stream" button does the same thing from the tester itself.
 
 ## Tests
 
