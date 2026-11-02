@@ -835,6 +835,17 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:12p
 (function(){
 var $=function(i){return document.getElementById(i)};
 var video=$('v'),player=null,curUrl='',tick=null,filter='all',logLines=[],tab='js',autoPick=false;
+
+// Beginner entry: ?mpd=<url>&lic=<lic>&kind=<live|vod> auto-starts with the real stream.
+function boot(){
+  var m=new URLSearchParams(location.search).get('mpd');
+  if(!m)return;
+  $('url').value=m;
+  var l=new URLSearchParams(location.search).get('lic');
+  if(l)$('lic').value=l;
+  autoPick=false;
+  start();
+}
 var SAMPLES={live:'https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd',vod:'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd'};
 
 $('theme').onclick=function(){var r=document.documentElement,dark=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.setAttribute('data-theme',dark?'light':'dark')};
@@ -991,6 +1002,8 @@ $('cpCode').onclick=function(){copy($('code').textContent,this)};
 $('url').addEventListener('input',function(){if(!curUrl)renderCode()});
 renderCode();
 if(!window.dashjs||!dashjs.supportsMediaSource()){status('This browser has no Media Source Extensions, so DASH playback is not available here.','err')}
+if(new URLSearchParams(location.search).get('mpd'))boot();
+else if(!curUrl)renderCode();
 })();
 </script>
 </body>

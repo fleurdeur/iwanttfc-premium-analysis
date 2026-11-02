@@ -28,6 +28,13 @@ The stream tester is published on GitHub Pages: https://fleurdeur.github.io/iwan
 
 The source lives in `dash_tester.html` in this repo (also at the repo root copy).
 
+Open the tester with a real stream already loaded:
+
+    https://fleurdeur.github.io/iwanttfc-premium-analysis/?mpd=<your-mpd-url>&lic=<your-license-url>&kind=live
+
+The auto quick-start buttons use public demo streams; the URL params above make the
+beginner auto mode play your own captured or minted stream.
+
 ## Tests
 
 - `python -m unittest test_iwant_bypass -v`
