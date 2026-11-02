@@ -997,7 +997,7 @@ $('bReal').onclick=function(){
     xhr.send();
     if(xhr.status===200){
         try{var s=JSON.parse(xhr.responseText);
-        if(s.mpd_left&&s.has_license){$('url').value=s.mpd_left();$('lic').value='';autoPick=false;start();return}}catch(e){}}
+        if(s.mpd_left&&s.has_license){$('url').value=s.mpd_left;$('lic').value='';autoPick=false;start();return}}catch(e){}}
     // Fallback: use live demo stream
     var defaultUrl='https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd';
     var defaultLic='';
