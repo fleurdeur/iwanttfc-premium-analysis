@@ -752,6 +752,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:12p
   <h2>Beginner quick start</h2>
   <p class="hint" style="margin:0 0 14px">Three clicks, zero configuration: pick a demo stream, play it, and the tester handles the rest.</p>
   <div class="row">
+    <button class="primary" id="bReal" type="button">Auto: play my stream</button>
     <button class="primary" id="bAuto" type="button">Auto demo: live</button>
     <button id="bAutoVod" type="button">Auto demo: VOD</button>
     <button id="bBest" type="button">Auto: best quality</button>
@@ -987,6 +988,9 @@ $('sVod').onclick=function(){$('url').value=SAMPLES.vod;start()};
 $('bAuto').onclick=function(){$('url').value=SAMPLES.live;start()};
 $('bAutoVod').onclick=function(){$('url').value=SAMPLES.vod;start()};
 $('bBest').onclick=function(){autoPick=true;start()};
+$('bReal').onclick=function(){var m=new URLSearchParams(location.search).get('mpd');
+  if(!m){status('Pass ?mpd=<url>&lic=<lic> to auto-play your stream.','err');return}
+  start()};
 
 function renderCode(){
   var u=curUrl||$('url').value.trim()||'https://example.com/stream.mpd';
